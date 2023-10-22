@@ -1,4 +1,4 @@
-#feature-id    Utilities > GraXpert Launcher
+#feature-id    GraXpertLauncher : Utilities > GraXpertLauncher
 
 #feature-info  Launches GraXpert app for the current view.
 
@@ -6,7 +6,7 @@
 
 #define VERSION "0.01"
 
-#define TITLE "GraXpertLauncher v" + VERSION
+#define TITLE "GraXpertLauncher Script"
 
 
 #include <pjsr/Sizer.jsh>          // needed to instantiate the VerticalSizer and HorizontalSizer objects
