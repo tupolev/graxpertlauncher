@@ -228,6 +228,10 @@ function launchGraxpert(launchParameters) {
          if (imageWindow != null) {
             Console.noteln("Loading back image " + graxpertFilePath);
             imageWindow[0].show();
+            Console.writeln("Removing temporary image " + temppath);
+            File.remove(temppath);
+            Console.writeln("Removed temporary image " + temppath);
+
          } else {
            Console.criticalln("Failed to open image " + graxpertFilePath);
          }
