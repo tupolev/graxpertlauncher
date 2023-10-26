@@ -2,7 +2,7 @@
 
 #feature-info  Launches GraXpert app for the current view.
 
-#feature-icon  GraxpertLoaderIcon.png
+#feature-icon  GraxpertLauncherIcon.png
 
 #define VERSION "0.01"
 
@@ -14,7 +14,7 @@
 
 let Graxpert = {
    correctionTypes : {
-      substraction : 'Substraction',
+      subtraction : 'Subtraction',
       division     : 'Division'
    },
    defaultNewFileSuffix: '_GraXpert'
@@ -25,8 +25,8 @@ let GraxpertLauncherParameters = {
    graxpertExecutablePath: 'C:\\graxpert\\GraXpert-win64.exe',
    imagePath: '',
    targetView: undefined,
-   correctionType: Graxpert.correctionTypes.substraction,
-   smoothingFactor: 1,
+   correctionType: Graxpert.correctionTypes.subtraction,
+   smoothingFactor: 0,
 
    // stores the current parameters values into the script instance
    save: function() {
@@ -42,13 +42,13 @@ let GraxpertLauncherParameters = {
       if (Parameters.has("graxpertExecutablePath"))
          GraxpertLauncherParameters.graxpertExecutablePath = Parameters.getString("graxpertExecutablePath")
       if (Parameters.has("imagePath"))
-         LchSaturationParameters.imagePath = Parameters.getString("imagePath")
+         GraxpertLauncherParameters.imagePath = Parameters.getString("imagePath")
       if (Parameters.has("targetView"))
-         LchSaturationParameters.targetView = Parameters.getString("targetView")
+         GraxpertLauncherParameters.targetView = Parameters.getString("targetView")
       if (Parameters.has("correctionType"))
-         LchSaturationParameters.correctionType = Parameters.getString("correctionType")
+         GraxpertLauncherParameters.correctionType = Parameters.getString("correctionType")
       if (Parameters.has("smoothingFactor"))
-         LchSaturationParameters.smoothingFactor = Parameters.getReal("smoothingFactor")
+         GraxpertLauncherParameters.smoothingFactor = Parameters.getReal("smoothingFactor")
    }
 }
 
@@ -103,7 +103,7 @@ function GraxpertLauncherDialog() {
 
    // add a view picker
    this.correctionTypeList = new ComboBox(this);
-   this.correctionTypeList.addItem(Graxpert.correctionTypes.substraction);
+   this.correctionTypeList.addItem(Graxpert.correctionTypes.subtraction);
    this.correctionTypeList.addItem(Graxpert.correctionTypes.division);
    this.correctionTypeList.currentItem = 0;
    this.correctionTypeList.toolTip = 'Correction type to apply';
@@ -120,7 +120,7 @@ function GraxpertLauncherDialog() {
    this.smoothingFactorControl.setRange(0, 1);
    this.smoothingFactorControl.setPrecision( 1 );
    this.smoothingFactorControl.slider.setRange( 0, 10 );
-   this.smoothingFactorControl.toolTip = "<p>Sets the smoothing factor.</p>";
+   this.smoothingFactorControl.toolTip = "<p>Smoothing factor to apply.</p>";
    this.smoothingFactorControl.onValueUpdated = ( value ) => {
       GraxpertLauncherParameters.smoothingFactor = value;
    };
@@ -130,6 +130,10 @@ function GraxpertLauncherDialog() {
    this.execButton.text = "Launch";
    this.execButton.width = 40;
    this.execButton.onClick = () => {
+      GraxpertLauncherParameters.graxpertExecutablePath = this.graxpertExecutablePath.text;
+      GraxpertLauncherParameters.correctionType = this.correctionTypeList.itemText(this.correctionTypeList.currentItem);
+      GraxpertLauncherParameters.smoothingFactor = this.smoothingFactorControl.value;
+      GraxpertLauncherParameters.save();
       this.ok();
    };
 
@@ -208,7 +212,7 @@ function launchGraxpert(launchParameters) {
    //3 execute command line
    let process = new ExternalProcess;
 
-   process.onStarted = () => Console.writeln("Launching GraXpert");
+   process.onStarted = () => Console.writeln("Launching GraXpert with command \n" + commandLine);
 
    process.onError = (errorCode) => Console.criticalln("GraXpert failed with error code " + errorCode);
 
